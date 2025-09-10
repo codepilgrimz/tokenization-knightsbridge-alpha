@@ -1,12 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { CategoryHeader } from '../../ui/CategoryHeader';
 import { UploadButton } from '../../ui/UploadButton';
 import { useFormContext } from '../../../contexts/FormContext';
 import { FormInput } from '@/components/ui/FormInput';
+import { useToast } from '@/hooks/use-toast';
 
 export const PensionPlanSection: React.FC = () => {
 	const { formData, updateFormData, fileUpload } = useFormContext();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [ISINumber, setISINumber] = useState<string>('')
+	const { toast } = useToast();
 
 	const handleUploadPlanGuide = async (file: File) => {
 		const url = await fileUpload.uploadFile(file, 'pensionPlanGuide');
@@ -19,20 +23,71 @@ export const PensionPlanSection: React.FC = () => {
 		updateFormData('pensionPlanGuidelines', guidelines);
 	};
 
+	/**
+	 * Verifies an ISIN using the Financial Modeling Prep API.
+	 *
+	 * @returns {Promise<void>}
+	 */
+	const handleVerifyIsin = async () => {
+		if (isLoading) return;
+
+		const isinToCheck = (typeof ISINumber === 'string' ? ISINumber : '').trim();
+
+		if (!isinToCheck) {
+			toast?.({ title: 'Missing ISIN', description: 'Enter an ISIN first.', variant: 'destructive' });
+			return;
+		}
+
+		const apiKey = import.meta.env.VITE_FMP_API_KEY || '';
+
+		if (!apiKey) {
+			toast?.({ title: 'API key missing', description: 'Set VITE_FMP_API_KEY in your env.', variant: 'destructive' });
+			return;
+		}
+
+		setIsLoading?.(true);
+		try {
+			const url = `https://financialmodelingprep.com/stable/search-isin?isin=${encodeURIComponent(isinToCheck)}&apikey=${encodeURIComponent(apiKey)}`;
+			const res = await fetch(url, { method: 'GET', headers: { Accept: 'application/json' } });
+
+			let data: any = null;
+			try { data = await res.json(); } catch { }
+
+			if (!res.ok) {
+				throw new Error(data?.message || res.statusText || 'Request failed');
+			}
+
+		} catch (e: any) {
+			toast?.({ title: 'Verification failed', description: e?.message || 'Unable to verify ISIN.', variant: 'destructive' });
+		} finally {
+			setIsLoading?.(false);
+		}
+	};
+
 	return (
 		<section className="box-border m-0 p-0">
 			<CategoryHeader
 				title="International Securities Identification Number"
 				description="ISIN Number"
 				rightContent={
-					<UploadButton
-						label="DTI Upload"
-						onFileUpload={handleUploadPlanGuide}
-						fieldName="pensionPlanGuide"
-						uploadedFile={fileUpload.getFile('pensionPlanGuide')}
-						isUploading={fileUpload.isUploading('pensionPlanGuide')}
-						onRemoveFile={() => fileUpload.removeFile('pensionPlanGuide')}
-					/>
+					// <UploadButton
+					// 	label="DTI Upload"
+					// 	onFileUpload={handleUploadPlanGuide}
+					// 	fieldName="pensionPlanGuide"
+					// 	uploadedFile={fileUpload.getFile('pensionPlanGuide')}
+					// 	isUploading={fileUpload.isUploading('pensionPlanGuide')}
+					// 	onRemoveFile={() => fileUpload.removeFile('pensionPlanGuide')}
+					// />
+					<button
+						type="button"
+						disabled={isLoading}
+						onClick={handleVerifyIsin}
+						className="box-border w-[271px] h-16 border flex items-center justify-center gap-8 m-0 p-0 rounded-xl border-solid border-input-border max-sm:w-full cursor-pointer hover:border-text-primary transition-colors"
+					>
+						<div className="box-border text-text-primary text-xl font-normal m-0 p-0">
+							Verify ISIN
+						</div>
+					</button>
 				}
 			/>
 
@@ -40,8 +95,10 @@ export const PensionPlanSection: React.FC = () => {
 				<FormInput
 					label=""
 					placeholder="IE01288004079"
-					value={formData.contactEmail}
-					onChange={(value) => updateFormData('contactEmail', value)}
+					// value={formData.contactEmail}
+					value={ISINumber}
+					// onChange={(value) => updateFormData('contactEmail', value)}
+					onChange={(value) => setISINumber(value.toUpperCase())}
 				/>
 			</div>
 
