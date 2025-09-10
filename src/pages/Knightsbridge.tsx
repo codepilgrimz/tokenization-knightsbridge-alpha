@@ -37,6 +37,9 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 	const [totalAmount, setTotalAmount] = useState(200); // Start with Knightsbridge Service + Mint Token
 
 	const { formData, fileUpload } = useFormContext();
+	const [lei, setLei] = useState('');
+	const [ISINumber, setISINumber] = useState('');
+
 	const { validateAndSubmit, isSubmitting } = useFormSubmission();
 
 	const handleCheckout = (amount: number) => {
@@ -101,10 +104,10 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 						<BusinessPlanSection />
 
 						<div className="w-full h-px bg-border-primary my-8" /> */}
-						<SavingsPlanSection />
+						<SavingsPlanSection lei={lei} setLei={setLei} />
 
 						<div className="w-full h-px bg-border-primary my-8" />
-						<PensionPlanSection />
+						<PensionPlanSection lei={lei} setISINumber={setISINumber} ISINumber={ISINumber} />
 
 						<div className="w-full h-px bg-border-primary my-8" />
 						<ContactInformationSection />

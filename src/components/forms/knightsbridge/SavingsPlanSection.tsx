@@ -6,12 +6,11 @@ import { useToast } from '@/hooks/use-toast';
 import { createClient, type AuthorizeResult, type ExtensionClient } from '@/utils/client';
 import { useFormContext } from '../../../contexts/FormContext';
 
-export const SavingsPlanSection: React.FC = () => {
+export const SavingsPlanSection: React.FC = ({lei, setLei}) => {
 	const { formData, updateFormData, fileUpload } = useFormContext();
 	const [signifyClient, setSignifyClient] = useState<ExtensionClient | null>(null);
 	const { toast } = useToast();
 	const [isLoading, setIsLoading] = useState(false);
-	const [lei, setLei] = useState('');
 
 	useEffect(() => {
 		const client = createClient();

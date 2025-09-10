@@ -1,15 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { CategoryHeader } from '../../ui/CategoryHeader';
 import { UploadButton } from '../../ui/UploadButton';
 import { useFormContext } from '../../../contexts/FormContext';
 import { FormInput } from '@/components/ui/FormInput';
 import { useToast } from '@/hooks/use-toast';
 
-export const PensionPlanSection: React.FC = () => {
+interface PensionPlanSectionProps {
+	ISINumber: string;
+	setISINumber: (value: string) => void;
+	lei: string;
+}
+
+export const PensionPlanSection: React.FC<PensionPlanSectionProps> = ({ ISINumber, setISINumber, lei }) => {
 	const { formData, updateFormData, fileUpload } = useFormContext();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [ISINumber, setISINumber] = useState<string>('')
 	const { toast } = useToast();
 
 	const handleUploadPlanGuide = async (file: File) => {
@@ -28,7 +33,7 @@ export const PensionPlanSection: React.FC = () => {
 	 *
 	 * @returns {Promise<void>}
 	 */
-	const handleVerifyIsin = async () => {
+	const handleVerifyIsin = useCallback(async (): Promise<void> => {
 		if (isLoading) return;
 
 		const isinToCheck = (typeof ISINumber === 'string' ? ISINumber : '').trim();
@@ -38,31 +43,42 @@ export const PensionPlanSection: React.FC = () => {
 			return;
 		}
 
-		const apiKey = import.meta.env.VITE_FMP_API_KEY || '';
+		const gleifBaseUrl = import.meta.env.VITE_GLEIF_API_BASE_URL;
 
-		if (!apiKey) {
-			toast?.({ title: 'API key missing', description: 'Set VITE_FMP_API_KEY in your env.', variant: 'destructive' });
+		if (!gleifBaseUrl) {
+			toast?.({ title: 'GLEIF URL is missing', description: 'Set VITE_GLEIF_API_BASE_URL in your env.', variant: 'destructive' });
 			return;
 		}
 
 		setIsLoading?.(true);
-		try {
-			const url = `https://financialmodelingprep.com/stable/search-isin?isin=${encodeURIComponent(isinToCheck)}&apikey=${encodeURIComponent(apiKey)}`;
-			const res = await fetch(url, { method: 'GET', headers: { Accept: 'application/json' } });
 
+		try {
+			const url = `${gleifBaseUrl}/lei-records/${lei}/isins`;
+			const res = await fetch(url, { method: 'GET', headers: { Accept: 'application/json' } });
+			
 			let data: any = null;
 			try { data = await res.json(); } catch { }
-
 			if (!res.ok) {
 				throw new Error(data?.message || res.statusText || 'Request failed');
 			}
+
+			let isins = data.data;
+
+			const isin = isins.find((item: any) => item.attributes.isin === ISINumber);
+			
+			if (isin) {
+				toast?.({ title: 'ISIN Verified', description: `The ISIN ${ISINumber} is valid.`, variant: 'default' });
+			} else {
+				toast?.({ title: 'ISIN Not Found', description: `The ISIN ${ISINumber} was not found.`, variant: 'destructive' });
+			}
+			
 
 		} catch (e: any) {
 			toast?.({ title: 'Verification failed', description: e?.message || 'Unable to verify ISIN.', variant: 'destructive' });
 		} finally {
 			setIsLoading?.(false);
 		}
-	};
+	},[ISINumber, isLoading, toast, setIsLoading, lei]);
 
 	return (
 		<section className="box-border m-0 p-0">
