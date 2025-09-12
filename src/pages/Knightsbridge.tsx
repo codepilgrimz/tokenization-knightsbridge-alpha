@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from '../components/Header';
 import { KYCInformationSection } from '../components/forms/knightsbridge/KYCInformationSection';
 import { CustodianInformationSection } from '../components/forms/knightsbridge/CustodianInformationSection';
@@ -21,6 +21,8 @@ import { FormProvider, useFormContext } from '../contexts/FormContext';
 import { useFormSubmission } from '../hooks/useFormSubmission';
 
 import Icon from '../assets/img/knightsbridge_icon.png';
+import { FormInput } from '@/components/ui/FormInput';
+import { CategoryHeader } from '@/components/ui/CategoryHeader';
 
 interface KnightsbridgeProps {
 	isDarkMode: boolean;
@@ -37,8 +39,13 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 	const [totalAmount, setTotalAmount] = useState(200); // Start with Knightsbridge Service + Mint Token
 
 	const { formData, fileUpload } = useFormContext();
-	const [lei, setLei] = useState('');
-	const [ISINumber, setISINumber] = useState('');
+	const [ lei, setLei ] = useState('');
+	const [ leiVerified, setLeiVerified ] = useState(false);
+
+	const [ wallet, setWallet ] = useState('');
+
+	const [ ISINumber, setISINumber ] = useState('');
+	const [ isinVerified, setIsinVerified ] = useState(false);
 
 	const { validateAndSubmit, isSubmitting } = useFormSubmission();
 
@@ -65,6 +72,14 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 	const handleClosePayment = () => {
 		setShowPayment(false);
 	};
+
+	useEffect(()=>{
+		setLeiVerified(false);
+	},[lei]);
+
+	useEffect(()=> {
+		setIsinVerified(false);
+	}, [ISINumber])
 
 	return (
 		<div className={`w-full min-h-screen relative overflow-x-hidden bg-bg-primary ${!isDarkMode ? 'light' : ''}`}>
@@ -104,13 +119,28 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 						<BusinessPlanSection />
 
 						<div className="w-full h-px bg-border-primary my-8" /> */}
-						<SavingsPlanSection lei={lei} setLei={setLei} />
+						<SavingsPlanSection lei={lei} setLei={setLei} setLeiVerified={setLeiVerified} />
 
 						<div className="w-full h-px bg-border-primary my-8" />
-						<PensionPlanSection lei={lei} setISINumber={setISINumber} ISINumber={ISINumber} />
+						<PensionPlanSection lei={lei} setISINumber={setISINumber} ISINumber={ISINumber} setIsinVerified={setIsinVerified} />
+
+						<CategoryHeader
+							title="Wallet"
+							description="Wallet Address"
+						/>
+						<div className="box-border grid grid-cols-1 md:grid-cols-2 gap-6 m-0 p-0 mb-6">
+							<FormInput
+								label=""
+								placeholder="0xfD2f2e1D219704960Ba1b0101d38DfE57099f1Ab"
+								// value={formData.contactEmail}
+								value={wallet}
+								// onChange={(value) => updateFormData('contactEmail', value)}
+								onChange={(value) => setWallet(value)}
+							/>
+						</div>
 
 						<div className="w-full h-px bg-border-primary my-8" />
-						<ContactInformationSection />
+						<ContactInformationSection lei={ leiVerified?lei:undefined} isin={isinVerified?ISINumber:undefined} wallet={wallet}/>
 
 						{/* <div className="w-full h-px bg-border-primary my-8" />
 						<TokenMintForm />

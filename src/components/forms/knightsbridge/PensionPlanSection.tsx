@@ -5,14 +5,16 @@ import { UploadButton } from '../../ui/UploadButton';
 import { useFormContext } from '../../../contexts/FormContext';
 import { FormInput } from '@/components/ui/FormInput';
 import { useToast } from '@/hooks/use-toast';
+import { set } from 'date-fns';
 
 interface PensionPlanSectionProps {
 	ISINumber: string;
 	setISINumber: (value: string) => void;
+	setIsinVerified: (value: boolean) => void;
 	lei: string;
 }
 
-export const PensionPlanSection: React.FC<PensionPlanSectionProps> = ({ ISINumber, setISINumber, lei }) => {
+export const PensionPlanSection: React.FC<PensionPlanSectionProps> = ({ ISINumber, setISINumber, lei, setIsinVerified }) => {
 	const { formData, updateFormData, fileUpload } = useFormContext();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { toast } = useToast();
@@ -63,10 +65,12 @@ export const PensionPlanSection: React.FC<PensionPlanSectionProps> = ({ ISINumbe
 			}
 
 			let isins = data.data;
+			console.log('isins', isins);
 
 			const isin = isins.find((item: any) => item.attributes.isin === ISINumber);
 			
 			if (isin) {
+				setIsinVerified(true);
 				toast?.({ title: 'ISIN Verified', description: `The ISIN ${ISINumber} is valid.`, variant: 'default' });
 			} else {
 				toast?.({ title: 'ISIN Not Found', description: `The ISIN ${ISINumber} was not found.`, variant: 'destructive' });

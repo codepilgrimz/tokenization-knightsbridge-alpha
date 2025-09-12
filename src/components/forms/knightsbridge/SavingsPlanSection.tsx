@@ -6,7 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 import { createClient, type AuthorizeResult, type ExtensionClient } from '@/utils/client';
 import { useFormContext } from '../../../contexts/FormContext';
 
-export const SavingsPlanSection: React.FC = ({lei, setLei}) => {
+interface SavingsPlanSectionProps {
+	lei: string;
+	setLei: (value: string) => void;
+	setLeiVerified: (vale: boolean) => void;
+}
+
+export const SavingsPlanSection: React.FC<SavingsPlanSectionProps> = ({ lei, setLei, setLeiVerified }) => {
 	const { formData, updateFormData, fileUpload } = useFormContext();
 	const [signifyClient, setSignifyClient] = useState<ExtensionClient | null>(null);
 	const { toast } = useToast();
@@ -144,6 +150,7 @@ export const SavingsPlanSection: React.FC = ({lei, setLei}) => {
 				try { body = await response.json(); } catch { }
 
 				if (response.status === 202) {
+					setLeiVerified(true);
 					toast({ title: 'Verification successful', description: body?.msg || 'Credential verified successfully.' });
 				} else if (response.status === 400) {
 					toast({ title: 'Bad request', description: body?.msg || 'The request is invalid or missing CESR.', variant: 'destructive' });

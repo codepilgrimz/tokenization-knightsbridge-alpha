@@ -1,0 +1,454 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "LEICreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "LEIRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "LEIUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      }
+    ],
+    "name": "UpdaterAuthorized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      }
+    ],
+    "name": "UpdaterRevoked",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "internalType": "bytes12[]",
+        "name": "newIsins",
+        "type": "bytes12[]"
+      }
+    ],
+    "name": "addISINs",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      }
+    ],
+    "name": "authorizeUpdater",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "authorizedUpdaters",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "internalType": "bytes12[]",
+        "name": "isins",
+        "type": "bytes12[]"
+      },
+      {
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "verificationTimestamp",
+        "type": "uint64"
+      }
+    ],
+    "name": "createLEI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      }
+    ],
+    "name": "getISINs",
+    "outputs": [
+      {
+        "internalType": "bytes12[]",
+        "name": "",
+        "type": "bytes12[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getLEIAtIndex",
+    "outputs": [
+      {
+        "internalType": "bytes20",
+        "name": "",
+        "type": "bytes20"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      }
+    ],
+    "name": "getLEIData",
+    "outputs": [
+      {
+        "internalType": "bytes12[]",
+        "name": "isins",
+        "type": "bytes12[]"
+      },
+      {
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "verificationTimestamp",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "lastUpdated",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalLEIs",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      }
+    ],
+    "name": "leiExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "",
+        "type": "bytes20"
+      }
+    ],
+    "name": "leiRecords",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "verificationTimestamp",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "lastUpdated",
+        "type": "uint64"
+      },
+      {
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "registeredLEIs",
+    "outputs": [
+      {
+        "internalType": "bytes20",
+        "name": "",
+        "type": "bytes20"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      }
+    ],
+    "name": "removeLEI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      }
+    ],
+    "name": "revokeUpdater",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "internalType": "bytes12[]",
+        "name": "isins",
+        "type": "bytes12[]"
+      },
+      {
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "verificationTimestamp",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateLEI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes20",
+        "name": "lei",
+        "type": "bytes20"
+      },
+      {
+        "internalType": "address",
+        "name": "newWalletAddress",
+        "type": "address"
+      }
+    ],
+    "name": "updateWalletAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
