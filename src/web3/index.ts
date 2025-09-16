@@ -1,5 +1,5 @@
 // src/lib/ethersWallet.ts
-import { Contract, JsonRpcProvider, Wallet, Interface } from 'ethers';
+import { Contract, JsonRpcProvider, Wallet, Interface, Network } from 'ethers';
 
 import abi from '../abi/LEIRegistry.json';
 import { toBytes12, toBytes20 } from './utils';
@@ -40,7 +40,12 @@ function extractRevertMessage(e: any): string {
   }
 
 export function makeSigner(pk: string, rpc: string) {
-  const provider = new JsonRpcProvider(rpc);
+  const chainId = 8060; // <-- use the real chainId for your endpoint
+  const provider = new JsonRpcProvider(
+    rpc,
+    { name: "mainnet", chainId },              // networkish
+    { staticNetwork: Network.from(chainId) }   // v6 replacement for StaticJsonRpcProvider
+  );
   const wallet = new Wallet(pk, provider);
   return { wallet, provider };
 }
@@ -62,6 +67,7 @@ export  const createLEI = async ({lei, isins, address, time}: {lei: string, isin
     data: string | undefined; 
 }> => {
     const { wallet } = makeSigner(import.meta.env.VITE_AUTHORIZOR_PVK, import.meta.env.VITE_RPC);
+
     const c = makeContract(import.meta.env.VITE_CONTRACT_ADDRESS, abi, wallet);
     console.log('Creating LEI:',  toBytes20(lei), isins.map(toBytes12), address, time );
     try{

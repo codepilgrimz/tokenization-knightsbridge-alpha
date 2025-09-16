@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Header } from '../components/Header';
+import { Download, ChevronDown, ChevronUp } from 'lucide-react';
 import { KYCInformationSection } from '../components/forms/knightsbridge/KYCInformationSection';
 import { CustodianInformationSection } from '../components/forms/knightsbridge/CustodianInformationSection';
 import { IssuerInformationSection } from '../components/forms/knightsbridge/IssuerInformationSection';
@@ -31,6 +32,7 @@ interface KnightsbridgeProps {
 
 const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThemeToggle }) => {
 	const [showPayment, setShowPayment] = useState(false);
+	const [showInstallationInstructions, setShowInstallationInstructions] = useState(false);
 	const [selectedServices, setSelectedServices] = useState({
 		knightsbridgeService: true,
 		serviceTax: true,
@@ -102,6 +104,153 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 						<p className="text-text-secondary text-lg md:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed">
 							Submit your business plan, complete KYC, and let our team handle the legal, hosting, and compliance to ensure a secure, vetted token launch.
 						</p>
+					</div>
+				</section>
+
+								{/* Signify Extension Section */}
+								<section className="w-full flex justify-center px-4 md:px-8 lg:px-16 mb-20">
+					<div className="w-full max-w-4xl">
+						<div className="border border-text-secondary rounded-lg p-8 bg-bg-secondary">
+							<div className="text-center mb-8">
+								<h2 className="text-text-primary text-2xl md:text-3xl font-medium mb-4">
+									Download Signify Extension
+								</h2>
+								<p className="text-text-secondary text-base md:text-lg">
+									Enhance your tokenization experience with our browser extension
+								</p>
+							</div>
+
+							{/* Download Button */}
+							<div className="flex justify-center mb-8">
+								<button className="group px-8 py-4 bg-text-primary text-bg-primary rounded-lg text-lg font-medium hover:bg-text-secondary transition-all duration-200 flex items-center justify-center gap-3 min-w-[250px]">
+									<Download className="w-5 h-5" />
+									Download Extension
+								</button>
+							</div>
+
+							{/* Installation Instructions Toggle */}
+							<div className="text-center">
+								<button
+									onClick={() => setShowInstallationInstructions(!showInstallationInstructions)}
+									className="group flex items-center justify-center gap-2 text-text-secondary hover:text-text-primary transition-colors duration-200 mx-auto"
+								>
+									<span className="text-base font-medium">How to Install Signify</span>
+									{showInstallationInstructions ? (
+										<ChevronUp className="w-4 h-4 group-hover:translate-y-[-1px] transition-transform duration-200" />
+									) : (
+										<ChevronDown className="w-4 h-4 group-hover:translate-y-[1px] transition-transform duration-200" />
+									)}
+								</button>
+							</div>
+
+							{/* Installation Instructions */}
+							{showInstallationInstructions && (
+								<div className="mt-8 pt-8 border-t border-text-secondary">
+									<h3 className="text-text-primary text-xl font-medium mb-6 text-center">
+										Installation Instructions (for Google Chrome)
+									</h3>
+									
+									<div className="space-y-6">
+										<div className="flex flex-col md:flex-row gap-4">
+											<div className="flex-shrink-0 w-8 h-8 bg-text-primary text-bg-primary rounded-full flex items-center justify-center text-sm font-medium">
+												1
+											</div>
+											<div className="flex-1">
+												<p className="text-text-secondary text-base leading-relaxed">
+													After downloading and unzipping, open Chrome and navigate to <code className="bg-bg-primary px-2 py-1 rounded text-sm">chrome://extensions</code>.
+												</p>
+											</div>
+										</div>
+
+										<div className="flex flex-col md:flex-row gap-4">
+											<div className="flex-shrink-0 w-8 h-8 bg-text-primary text-bg-primary rounded-full flex items-center justify-center text-sm font-medium">
+												2
+											</div>
+											<div className="flex-1">
+												<p className="text-text-secondary text-base leading-relaxed">
+													Enable "Developer mode" using the toggle in the top-right corner.
+												</p>
+											</div>
+										</div>
+
+										<div className="flex flex-col md:flex-row gap-4">
+											<div className="flex-shrink-0 w-8 h-8 bg-text-primary text-bg-primary rounded-full flex items-center justify-center text-sm font-medium">
+												3
+											</div>
+											<div className="flex-1">
+												<p className="text-text-secondary text-base leading-relaxed">
+													Click the "Load unpacked" button that appears on the left.
+												</p>
+											</div>
+										</div>
+
+										<div className="flex flex-col md:flex-row gap-4">
+											<div className="flex-shrink-0 w-8 h-8 bg-text-primary text-bg-primary rounded-full flex items-center justify-center text-sm font-medium">
+												4
+											</div>
+											<div className="flex-1">
+												<p className="text-text-secondary text-base leading-relaxed">
+													Select the browser-extension folder you just downloaded.
+												</p>
+											</div>
+										</div>
+									</div>
+
+									<div className="mt-8 pt-6 border-t border-text-secondary">
+										<h4 className="text-text-primary text-lg font-medium mb-4">Configuration:</h4>
+										
+										<div className="space-y-4">
+											<div className="flex flex-col md:flex-row gap-4">
+												<div className="flex-shrink-0 w-6 h-6 bg-text-secondary text-bg-primary rounded-full flex items-center justify-center text-xs font-medium">
+													1
+												</div>
+												<div className="flex-1">
+													<p className="text-text-secondary text-base leading-relaxed">
+														Once installed, click on the extension's icon in your browser toolbar to open it.
+													</p>
+												</div>
+											</div>
+
+											<div className="flex flex-col md:flex-row gap-4">
+												<div className="flex-shrink-0 w-6 h-6 bg-text-secondary text-bg-primary rounded-full flex items-center justify-center text-xs font-medium">
+													2
+												</div>
+												<div className="flex-1">
+													<p className="text-text-secondary text-base leading-relaxed">
+														Click the settings icon.
+													</p>
+												</div>
+											</div>
+
+											<div className="flex flex-col md:flex-row gap-4">
+												<div className="flex-shrink-0 w-6 h-6 bg-text-secondary text-bg-primary rounded-full flex items-center justify-center text-xs font-medium">
+													3
+												</div>
+												<div className="flex-1">
+													<p className="text-text-secondary text-base leading-relaxed">
+														In the "Vendor Url" field, paste the following URL: 
+														<code className="bg-bg-primary px-2 py-1 rounded text-sm ml-2 break-all">
+															https://api.npoint.io/53b6f17fceb96be39865
+														</code>
+													</p>
+												</div>
+											</div>
+
+											<div className="flex flex-col md:flex-row gap-4">
+												<div className="flex-shrink-0 w-6 h-6 bg-text-secondary text-bg-primary rounded-full flex items-center justify-center text-xs font-medium">
+													4
+												</div>
+												<div className="flex-1">
+													<p className="text-text-secondary text-base leading-relaxed">
+														Click "Load and Save".
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							)}
+						</div>
 					</div>
 				</section>
 
@@ -177,6 +326,8 @@ const KnightsbridgeContent: React.FC<KnightsbridgeProps> = ({ isDarkMode, onThem
 						</div>
 					</div>
 				</div>
+
+
 			</main>
 
 			{/* Payment Sidebar - now handles its own positioning and mobile responsiveness */}
